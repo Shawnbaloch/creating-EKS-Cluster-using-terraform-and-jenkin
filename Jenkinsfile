@@ -13,8 +13,14 @@ pipeline {
         
         stage('Terraform Init') {
             steps {
-                // Initialize Terraform
-                sh 'terraform init -backend-config="s3_bucket=infra-terraform-state-01" -backend-config="key=terraform.tfstate"'
+                script {
+            def terraformInitCmd = """
+                terraform init \\
+                -backend-config="bucket=infra-terraform-state-01" \\
+                -backend-config="key=terraform.tfstate"
+            """
+            sh(script: terraformInitCmd, returnStatus: true)
+        }
             }
         }
         
