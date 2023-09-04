@@ -62,25 +62,36 @@ resource "aws_security_group" "sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-module "eks_cluster" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "java-app-prod"
-  cluster_version = "1.21"
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "19.0.4"
 
-  vpc_id = aws_vpc.k8s_vpc.id
+  cluster_name    = "ts4u"
+  cluster_version = "1.23"
 
-  subnets = [aws_subnet.public_subnet.id]
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access  = true
 
-  worker_groups = {
-    eks_nodes = {
-      instance_type   = "t2.micro"  # Replace with your desired instance type
-      asg_max_size    = 3
-      asg_min_size    = 1
-      asg_desired_size = 2
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.public_subnets
+
+  enable_irsa = true
+
+
+
+  eks_managed_node_groups = {
+   
+    green = {
+      min_size     = 2
+      max_size     = 2
+      desired_size = 2
+
+      instance_types = ["t2.medium"]
     }
+
+  
   }
-}
+
 # Configure remote state in an S3 bucket
 terraform {
   backend "s3" {
