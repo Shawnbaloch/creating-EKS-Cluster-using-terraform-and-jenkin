@@ -12,6 +12,10 @@ resource "aws_vpc" "k8s_vpc" {
     Name = "k8s-infra"
   }
 }
+# Create an Elastic IP for the NAT Gateway
+resource "aws_eip" "nat_eip" {
+  instance = null # You don't need to associate it with an EC2 instance
+}
 
 # Create a public subnet
 resource "aws_subnet" "public_subnet" {
