@@ -74,7 +74,7 @@ module "eks_cluster" {
 
   vpc_id = aws_vpc.k8s_vpc.id
 
-  node_groups = {}
+  #node_groups = {}
 }
 
 # Configure remote state in an S3 bucket
