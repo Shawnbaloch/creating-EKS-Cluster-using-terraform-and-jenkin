@@ -64,22 +64,34 @@ resource "aws_security_group" "sg" {
   }
 }
 
-# Create an EKS cluster using Fargate
 module "eks_cluster" {
   source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = "java-app-prdo"
+  cluster_name    = "java-app-prod"
   cluster_version = "1.21"
+
+  # Define the worker node group
+  node_groups = {
+    eks_nodes = {
+      desired_capacity = 2
+      max_capacity     = 3
+      min_capacity     = 1
+      instance_type    = "t2.micro"  # Replace with your desired instance type
+    }
+  }
+
+  vpc_id = aws_vpc.k8s_vpc.id
 
   fargate_profiles = {
     default = {
       subnets = [aws_subnet.public_subnet.id]
     }
   }
-
-  vpc_id = aws_vpc.k8s_vpc.id
-
-  #node_groups = {}
 }
+
+
+  
+
+  
 
 # Configure remote state in an S3 bucket
 terraform {
