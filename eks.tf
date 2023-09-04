@@ -63,6 +63,7 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+}
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.0.4"
