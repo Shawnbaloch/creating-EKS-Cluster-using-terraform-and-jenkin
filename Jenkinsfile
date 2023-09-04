@@ -25,11 +25,7 @@ pipeline {
             }
         }
         
-        stage('Terraform Destroy') {
-            steps {
-                // Destroy the EKS cluster using Terraform (optional)
-                sh 'terraform destroy -auto-approve'
-            }
+       
         }
     }
 }
